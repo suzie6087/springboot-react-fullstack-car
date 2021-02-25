@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
 import com.example.demo.domain.Car;
@@ -13,9 +15,8 @@ import com.example.demo.domain.OwnerRepository;
 import com.example.demo.domain.User;
 import com.example.demo.domain.UserRepository;
 
-
 @SpringBootApplication
-public class CardatabaseApplication {
+public class CardatabaseApplication extends SpringBootServletInitializer {
 	@Autowired
 	private CarRepository repository;
 
@@ -25,16 +26,20 @@ public class CardatabaseApplication {
 	@Autowired
 	private UserRepository urepository;
 
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(CardatabaseApplication.class);
+	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		SpringApplication.run(CardatabaseApplication.class, args);
 	}
 
 	@Bean
 	CommandLineRunner runner() {
 		return args -> {
-			Owner owner1 = new Owner("John" , "Johnson");
-			Owner owner2 = new Owner("Mary" , "Robinson");
+			Owner owner1 = new Owner("John", "Johnson");
+			Owner owner2 = new Owner("Mary", "Robinson");
 			orepository.save(owner1);
 			orepository.save(owner2);
 
@@ -43,7 +48,8 @@ public class CardatabaseApplication {
 			repository.save(new Car("Toyota", "Prius", "Silver", "KKO-0212", 2018, 39000, owner2));
 
 			urepository.save(new User("user", "$2a$04$1.YhMIgNX/8TkCKGFUONWO1waedKhQ5KrnB30fl0Q01QKqmzLf.Zi", "USER"));
-			urepository.save(new User("admin", "$2a$04$KNLUwOWHVQZVpXyMBNc7JOzbLiBjb9Tk9bP7KNcPI12ICuvzXQQKG", "ADMIN"));
+			urepository
+					.save(new User("admin", "$2a$04$KNLUwOWHVQZVpXyMBNc7JOzbLiBjb9Tk9bP7KNcPI12ICuvzXQQKG", "ADMIN"));
 		};
 	}
 
